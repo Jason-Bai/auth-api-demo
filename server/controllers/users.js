@@ -1,48 +1,63 @@
-const JWT = require('jsonwebtoken')
-const User = require('../models/user')
-const { JWT_SECRET } = require('../configration')
+const JWT = require('jsonwebtoken');
+const User = require('../models/user');
+const { JWT_SECRET } = require('../configuration');
 
-const signToken = user => {
+signToken = user => {
   return JWT.sign({
-    iss: 'authToken',
+    iss: 'CodeWorkr',
     sub: user.id,
-    iat: Date.now(),
-    exp: Date.now() + 60 * 60 * 24
-  }, JWT_SECRET)
+    iat: new Date().getTime(), // current time
+    exp: new Date().setDate(new Date().getDate() + 1) // current time + 1 day ahead
+  }, JWT_SECRET);
 }
 
 module.exports = {
-  signup: async (req, res, next) => {
-    // email && password
-    console.log('UserController.signUp() called!')
-    const { email, password } = req.params.body
+  signUp: async (req, res, next) => {
+    const { email, password } = req.value.body;
 
-    const existed = await User.findOne({ email })
-
-    if (existed) {
-      return res.status(403).json({ error: 'Email is already in use' })
+    // Check if there is a user with the same email
+    const foundUser = await User.findOne({ "local.email": email });
+    if (foundUser) { 
+      return res.status(403).json({ error: 'Email is already in use'});
     }
 
-    const newUser = new User({
-      email,
-      password
-    })
+    // Create a new user
+    const newUser = new User({ 
+      method: 'local',
+      local: {
+        email: email, 
+        password: password
+      }
+    });
 
-    await newUser.save()
+    await newUser.save();
 
-    const token = signToken(newUser)
-
-    res.status(200).json({ token })
+    // Generate the token
+    const token = signToken(newUser);
+    // Respond with token
+    res.status(200).json({ token });
   },
-  signin: async (req, res, next) => {
-    // email && password
-    console.log('UserController.signIn() called!')
-    const token = signToken(req.user)
-    res.status(200).json({ token })
+
+  signIn: async (req, res, next) => {
+    // Generate token
+    const token = signToken(req.user);
+    res.status(200).json({ token });
   },
+
+  googleOAuth: async (req, res, next) => {
+    // Generate token
+    const token = signToken(req.user);
+    res.status(200).json({ token });
+  },
+
+  facebookOAuth: async (req, res, next) => {
+    // Generate token
+    const token = signToken(req.user);
+    res.status(200).json({ token });
+  },
+
   secret: async (req, res, next) => {
-    // email && password
-    console.log('UserController.secret() called!')
-    res.json({ secret: 'resource' })
+    console.log('I managed to get here!');
+    res.json({ secret: "resource" });
   }
 }

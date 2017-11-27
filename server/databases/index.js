@@ -1,18 +1,22 @@
-const mongoose = require('mongoose')
-const { db } = require('../configration')
+const mongoose = require('mongoose');
 
-mongoose.Promise = global.Promise
-
-const { host, port, name } = db[(process.env.NODE_ENV || 'development')]
+mongoose.Promise = global.Promise;
 
 module.exports = {
   connect: () => {
-    // connect
-    mongoose.connect(`mongodb://${host}:${port}/${name}`, {
-      useMongoClient: true
-    }).then(() => {
-      console.log('API Auth Demo Mongodb connected!')
-    })
+    if (process.env.NODE_ENV === 'test') {
+      mongoose
+        .connect('mongodb://localhost/APIAuthenticationTEST', { useMongoClient: true })
+        .then(() => {
+          console.log('Auth API Mongogb connected!')
+        })
+    } else {
+      mongoose
+        .connect('mongodb://localhost/APIAuthentication', { useMongoClient: true })
+        .then(() => {
+          console.log('Auth API Mongogb connected!')
+        })
+    }
 
     return mongoose
   }

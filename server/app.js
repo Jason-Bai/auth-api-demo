@@ -1,23 +1,21 @@
-const express = require('express')
-const bodyParser = require('body-parser')
-const logger = require('morgan')
-const app = express()
-// import routes
-const UserRouter = require('./routes/users')
-// import DB configs
-const DB = require('./databases')
+const express = require('express');
+const morgan = require('morgan');
+const bodyParser = require('body-parser');
+const db = require('./databases');
 
 // connect to db
-DB.connect()
+db.connect()
 
-// Middlewares
-if (!((process.env.NODE_ENV || 'development') === 'test')) {
-  app.use(logger('dev'))
+const app = express();
+
+// Middlewares moved morgan into if for clear tests
+if (!process.env.NODE_ENV === 'test') {
+  app.use(morgan('dev'));
 }
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({ extended: true }))
+
+app.use(bodyParser.json());
 
 // Routes
-app.use('/users', UserRouter)
+app.use('/users', require('./routes/users'));
 
-module.exports = app
+module.exports = app;

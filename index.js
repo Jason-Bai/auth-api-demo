@@ -1,7 +1,8 @@
-const app = require('./server/app')
+const app = require('./server/app');
 
-const port = process.env.PORT || 3000
+// Start the server
+const port = process.env.PORT || 3000;
+app.listen(port);
+console.log(`Auth API Server listening at ${port}`);
 
-app.listen(port, () => {
-  console.log(`API Auth Demo listening at ${port} port!`)
-})
+// refactored code for easier test and feature scale

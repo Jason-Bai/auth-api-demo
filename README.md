@@ -1,2 +1,2 @@
-# auth-api-demo
-Backend API Auth
+# Auth-Api-Demo
+Backend auth api
