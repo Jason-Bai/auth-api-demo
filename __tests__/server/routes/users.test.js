@@ -22,7 +22,7 @@ describe('Users route', () => {
     password: faker.internet.password(),
   };
   const preSave = {
-    email: 'mr.sometest@gmail.com',
+    email: '602316022@qq.com',
     password: faker.internet.password(),
   };
 
