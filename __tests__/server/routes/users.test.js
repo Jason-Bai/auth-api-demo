@@ -7,7 +7,7 @@ const faker = require('faker');
 const mongoose = require('mongoose');
 const { expect } = chai;
 
-const server = require('../../../server/app');
+const server = require('../../../app');
 
 chai.use(chaiHttp);
 

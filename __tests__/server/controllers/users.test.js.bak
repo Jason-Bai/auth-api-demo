@@ -8,8 +8,8 @@ const sinonChai = require('sinon-chai');
 const rewire = require('rewire');
 const { expect } = chai;
 
-const User = require('../../../server/models/user');
-const userController = rewire('../../../server/controllers/users.js');
+const User = require('../../../app/models/user');
+const userController = rewire('../../../app/controllers/users.js');
 
 chai.use(sinonChai);
 
