@@ -1,23 +1,27 @@
-const Router = require('express-promise-router');
+const router = require('express-promise-router');
 const methods = require('methods');
 
 module.exports = () => {
-  const router = Router();
+  const routerHelper = router();
 
   methods.forEach((method) => {
     const _method = `${method.substr(0, 1).toUpperCase()}${method.substr(1)}`;
-    router[_method] = (path, fns) => {
-      const route = router.route(path);
-      route[method].apply(route, fns);
+    routerHelper[`http${_method}`] = (path, fns) => {
+      const route = routerHelper.route(path);
+      route[method].apply(route, [...fns]);
       return route;
     };
   });
 
-  router.Collection = (path, getFns = [(req, res, next) => next()], postFns = [(req, res, next) => next()]) => {
-    const getRoute = router.Get(path, getFns);
-    const postRoute = router.Post(path, postFns);
+  routerHelper.httpCollection = (
+    path,
+    getFns = [(req, res, next) => next()],
+    postFns = [(req, res, next) => next()]
+  ) => {
+    const getRoute = routerHelper.httpGet(path, getFns);
+    const postRoute = routerHelper.httpPost(path, postFns);
     return [getRoute, postRoute];
   };
 
-  return router;
-}
+  return routerHelper;
+};

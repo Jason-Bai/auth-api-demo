@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
+const Joi = require('joi');
+
 const Schema = mongoose.Schema;
 
 // Create a schema
@@ -7,38 +9,39 @@ const userSchema = new Schema({
   method: {
     type: String,
     enum: ['local', 'google', 'facebook'],
-    required: true
+    required: true,
   },
   local: {
     email: {
       type: String,
-      lowercase: true
+      lowercase: true,
     },
     password: {
-      type: String
-    }
+      type: String,
+    },
   },
   google: {
     id: {
-      type: String
+      type: String,
     },
     email: {
       type: String,
-      lowercase: true
-    }
+      lowercase: true,
+    },
   },
   facebook: {
     id: {
-      type: String
+      type: String,
     },
     email: {
       type: String,
-      lowercase: true
-    }
-  }
+      lowercase: true,
+    },
+  },
 });
 
-userSchema.pre('save', async function(next) {
+/* eslint func-names: 0 */
+userSchema.pre('save', async function (next) {
   try {
     if (this.method !== 'local') {
       next();
@@ -50,21 +53,28 @@ userSchema.pre('save', async function(next) {
     // Re-assign hashed version over original, plain text password
     this.local.password = passwordHash;
     next();
-  } catch(error) {
+  } catch (error) {
     next(error);
   }
 });
 
-userSchema.methods.isValidPassword = async function(newPassword) {
+userSchema.methods.isValidPassword = async function (newPassword) {
   try {
     return await bcrypt.compare(newPassword, this.local.password);
-  } catch(error) {
+  } catch (error) {
     throw new Error(error);
   }
-}
+};
 
 // Create a model
 const User = mongoose.model('user', userSchema);
+
+User.schemas = {
+  authSchema: Joi.object().keys({
+    email: Joi.string().email().required(),
+    password: Joi.string().required(),
+  }),
+};
 
 // Export the model
 module.exports = User;

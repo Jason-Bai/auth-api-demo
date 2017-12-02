@@ -8,7 +8,7 @@ const User = require('./models/user');
 // JSON WEB TOKENS STRATEGY
 passport.use(new JwtStrategy({
   jwtFromRequest: ExtractJwt.fromHeader('authorization'),
-  secretOrKey: config.JWT_SECRET
+  secretOrKey: config.JWT_SECRET,
 }, async (payload, done) => {
   try {
     // Find the user specified in token
@@ -20,36 +20,36 @@ passport.use(new JwtStrategy({
     }
 
     // Otherwise, return the user
-    done(null, user);
-  } catch(error) {
-    done(error, false);
+    return done(null, user);
+  } catch (error) {
+    return done(error, false);
   }
 }));
 
 // LOCAL STRATEGY
 passport.use(new LocalStrategy({
-  usernameField: 'email'
+  usernameField: 'email',
 }, async (email, password, done) => {
   try {
     // Find the user given the email
-    const user = await User.findOne({ "local.email": email });
-    
+    const user = await User.findOne({ 'local.email': email });
+
     // If not, handle it
     if (!user) {
       return done(null, false);
     }
-  
+
     // Check if the password is correct
     const isMatch = await user.isValidPassword(password);
-  
+
     // If not, handle it
     if (!isMatch) {
       return done(null, false);
     }
-  
+
     // Otherwise, return the user
-    done(null, user);
-  } catch(error) {
-    done(error, false);
+    return done(null, user);
+  } catch (error) {
+    return done(error, false);
   }
 }));

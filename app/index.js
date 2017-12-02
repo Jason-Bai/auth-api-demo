@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const db = require('./databases');
 
 // connect to db
-db.connect()
+db.connect();
 
 const app = express();
 

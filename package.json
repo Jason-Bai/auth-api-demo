@@ -8,7 +8,8 @@
     "test": "cross-env NODE_ENV=test mocha --timeout 5000 __tests__/server/**/*.test.js",
     "report": "cross-env NODE_ENV=test nyc --reporter=lcov mocha --timeout 5000 __tests__/server/**/*.test.js",
     "text-report": "cross-env NODE_ENV=test nyc --reporter=text-summary mocha --timeout 5000 __tests__/server/**/*.test.js",
-    "nyc": "cross-env NODE_ENV=test nyc mocha --timeout 5000 __tests__/server/**/*.test.js"
+    "nyc": "cross-env NODE_ENV=test nyc mocha --timeout 5000 __tests__/server/**/*.test.js",
+    "lint": "eslint ./app && echo '\u001b[32m\u001b[1mEslint validate success.\u001b[22m\u001b[39m'"
   },
   "author": "CodeWorkr",
   "license": "ISC",
@@ -28,8 +29,15 @@
     "passport-local": "^1.0.0"
   },
   "devDependencies": {
+    "apidoc": "^0.17.6",
+    "babel-eslint": "^8.0.3",
     "chai": "^4.1.2",
     "chai-http": "^3.0.0",
+    "eslint": "^3.10.0",
+    "eslint-config-airbnb": "^10.0.1",
+    "eslint-plugin-import": "^1.16.0",
+    "eslint-plugin-jsx-a11y": "^2.2.3",
+    "eslint-plugin-react": "^6.4.1",
     "faker": "^4.1.0",
     "mocha": "^3.5.0",
     "nodemon": "^1.11.0",
